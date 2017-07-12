@@ -9,14 +9,14 @@
     <header>
       <a href="http://localhost:3000/">Gabble</a>
       <a href="http://localhost:3000/new">Create a new gab</a>
-      <a href="http://localhost:3000/login">Logged in as{{displayName}}</a>
+      <a href="http://localhost:3000/login">Logged in as {{displayName}}</a>
       <a href="http://localhost:3000/logout">Log out</a>
     </header>
     <main>
       <div class="gabs">
         {{#gabs}}
         <div>
-          <p>{{name}}: {{gab}}</p>
+          <p><b>{{name}}:</b> {{gab}}</p>
           <p>{{date}}</p>
           <p>{{likes}}</p>
         </div>

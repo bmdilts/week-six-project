@@ -22,48 +22,50 @@ app.use(bodyParser.urlencoded({
 app.use('/public', express.static('public'));
 app.use(validator());
 
-var loggedin = true
 
 router.get('/', function(req, res) {
   if (!req.session.userId) {
     res.redirect('/login');
   } else {
-    const displayName = models.users.findOne({where: {id: req.session.userId}}).then(function(user){
-      return user.displayName;
+    const displayNameP = models.users.findOne({where: {id: req.session.userId}})
+    .then(function(user){
+      return user.dataValues.displayName;
     });
-    models.msgs.findAll({include: [models.users]})
-      .then(tasks => {
-        console.log(JSON.stringify(tasks));
-        for(let i = 0; i < tasks.length; i++){
-          let name = tasks.user.displayName;
-          let gab = tasks.gab;
-          let date = tasks.date;
-          // return [name, gab, date];
+
+    const gabsP = models.msgs.findAll({include: [models.users], raw: true})
+      .then(data => {
+        const gabs = [];
+        for(let i = 0; i < data.length; i++){
+          gabs.push({
+            name: data[i]['user.displayName'],
+            gab: data[i].gab,
+            date: data[i].createdAt
+          });
         }
-      // function(msgs){
-      //   console.log(msgs);
-      //   for(let i = 0; i < msgs.length; i++){
-      //     var user = models.users.findOne({where: {id: msgs[i].userId}})
-      //     .then(function(user){
-      //       return user;
-      //     });
-      //     console.log(user);
-      //     var name = user.displayName;
-      //     console.log(name);
-      //     return name;
-      //     }
-      //   }
+        return gabs;
     });
-    models.msgs.findAll({include: [models.likes]})
-      .then(tasks => {
-        console.log(JSON.stringify(tasks));
-        for(let i = 0; i < tasks.length; i++){
-          let likes = tasks.userId.length;
-          return likes;
+
+    const likesP = models.msgs.findAll({include: [models.likes], raw: true})
+      .then(data => {
+        const likes = [];
+        for(let i = 0; i < data.length; i++){
+          // likes.push(data[i][likes.userId].length);
+          likes.push(0);
         }
+        return likes;
       });
 
-    res.render('home', {gabs: {displayName: displayName, name: name, gab: gab, date: date, likes: likes}});
+    Promise.all([displayNameP, gabsP, likesP])
+      .then(function(results){
+        const displayName = results[0];
+        const gabs = results[1];
+        const likes = results[2];
+        for(let i=0; i<gabs.length; i++){
+          gabs[i].likes = likes[i];
+        }
+        res.render('home', {displayName: displayName, gabs: gabs});
+      });
+    // res.send('done');
   }
 });
 
@@ -90,7 +92,8 @@ router.get('/new', function(req, res) {
 
 
 router.post('/like', function (req, res) {
-
+  
+  res.redirect('/');
 });
 
 router.post('/msg', function(req, res) {
