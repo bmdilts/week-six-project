@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/../public/main.css">
+    <title>New Gab!</title>
+  </head>
+  <body>
+    <header>
+      <a href="http://localhost:3000/">Gabble</a>
+      <a href="http://localhost:3000/new">Create a new gab</a>
+      <a href="http://localhost:3000/login">Logged in as{{displayName}}</a>
+      <a href="http://localhost:3000/logout">Log out</a>
+    </header>
+    <main>
+      <form action="/msg" method="post">
+        <h2>Create a new gab</h2>
+        <textarea rows="4" cols="50" autofocus="true" maxlength="140" name="new_gab" required="true"></textarea>
+        <button type="submit">Save gab</button>
+      </form>
+    </main>
+  </body>
+</html>

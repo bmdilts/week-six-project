@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/../public/main.css">
+    <title>Likes</title>
+  </head>
+  <body>
+    <header>
+      <a href="http://localhost:3000/">Gabble</a>
+      <a href="http://localhost:3000/new">Create a new gab</a>
+      <a href="http://localhost:3000/login">Logged in as{{displayName}}</a>
+      <a href="http://localhost:3000/logout">Log out</a>
+    </header>
+    <main>
+      {{#gab}}
+      <div class="gabs">
+        <p>{{gab}}</p>
+        <p>{{date}}</p>
+      </div>
+      <h2>Liked by</h2>
+      <ul>
+        {{#likes}}
+        <li>{{.}}</li>
+        {{/likes}}
+      </ul>
+      {{/gab}}
+    </main>
+  </body>
+</html>

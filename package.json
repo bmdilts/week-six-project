@@ -18,9 +18,11 @@
   "homepage": "https://github.com/bmdilts/week-six-project#readme",
   "keywords": [],
   "dependencies": {
+    "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
+    "express-validator": "^3.2.1",
     "fs": "0.0.1-security",
     "mustache": "^2.3.0",
     "mustache-express": "^1.2.5",

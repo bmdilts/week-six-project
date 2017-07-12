@@ -7,24 +7,28 @@
   </head>
   <body>
     <header>
-      <a href="./home.mustache">Gabble</a>
-      <a href="./new.mustache">Create a new gab</a>
-      <a href="./login.mustache">Logged in as{{displayName}}</a>
-      <a href="">Log out</a>
+      <a href="http://localhost:3000/">Gabble</a>
+      <a href="http://localhost:3000/new">Create a new gab</a>
+      <a href="http://localhost:3000/login">Logged in as{{displayName}}</a>
+      <a href="http://localhost:3000/logout">Log out</a>
     </header>
     <main>
       <div class="gabs">
         {{#gabs}}
         <div>
-          <p>{{gab}}</p>
+          <p>{{name}}: {{gab}}</p>
           <p>{{date}}</p>
           <p>{{likes}}</p>
         </div>
-        {{/gabs}}
         <form action="/like" method="post">
-          <button class="button" type="submit" value="like"></button>
-          <button class="button" type="submit" value="unlike"></button>
+          <button class="button" type="submit" value="like">Like</button>
         </form>
+        {{#delete}}
+        <form>
+          <button class="button" type="submit" value="delete">Delete</button>
+        </form>
+        {{/delete}}
+        {{/gabs}}
       </div>
     </main>
   </body>

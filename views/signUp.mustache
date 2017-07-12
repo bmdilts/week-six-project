@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/../public/main.css">
+    <title>Sign up for Gabble!</title>
+  </head>
+  <body>
+    <header>
+      <a href="http://localhost:3000/">Gabble</a>
+      <a href="http://localhost:3000/new">Create a new gab</a>
+      <a href="http://localhost:3000/login">Logged in as{{displayName}}</a>
+      <a href="http://localhost:3000/logout">Log out</a>
+    </header>
+    <main>
+      <h2>Sign up</h2>
+      <form action="/signup" method="post">
+        <label for="displayName">Display Name</label>
+        <input type="text" name="displayName" placeholder="Usually first name">
+        <label for="username">Username</label>
+        <input type="text" name="username" value="">
+        <label for="password">Password</label>
+        <input type="text" name="password" value="">
+        <label for="confirm">Password confirmation</label>
+        <input type="text" name="confirm" value="">
+        <button type="submit" name="sub_signup">Sign up</button>
+      </form>
+    </main>
+  </body>
+</html>
