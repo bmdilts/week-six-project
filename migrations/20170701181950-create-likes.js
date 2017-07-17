@@ -9,7 +9,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       like: {
-        type: Sequelize.BOOLEAN
+        allowNull: false,
+        type: Sequelize.ARRAY(Sequelize.STRING)
       },
       createdAt: {
         allowNull: false,

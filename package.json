@@ -4,7 +4,10 @@
   "description": "week-six-project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "boot": "dropdb gabble && createdb gabble && sequelize db:migrate && sequelize db:seed:all",
+    "gitsave": "git add . && git commit -m 'autosave' && git push -u origin master",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +30,6 @@
     "mustache": "^2.3.0",
     "mustache-express": "^1.2.5",
     "pg": "^6.4.0",
-    "sequelize": "^4.2.1"
+    "sequelize": "^4.3.2"
   }
 }

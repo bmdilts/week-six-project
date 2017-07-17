@@ -27,52 +27,90 @@ router.get('/', function(req, res) {
   if (!req.session.userId) {
     res.redirect('/login');
   } else {
-    const displayNameP = models.users.findOne({where: {id: req.session.userId}})
-    .then(function(user){
-      return user.dataValues.displayName;
-    });
+    const displayNameP = models.users.findOne({
+        where: {
+          id: req.session.userId
+        }
+      })
+      .then(function(user) {
+        return user.dataValues.displayName;
+      });
 
-    const gabsP = models.msgs.findAll({include: [models.users], raw: true})
+    const gabsP = models.msgs.findAll({
+        include: [models.users],
+        raw: true
+      })
       .then(data => {
         const gabs = [];
-        for(let i = 0; i < data.length; i++){
+        for (let i = 0; i < data.length; i++) {
           gabs.push({
+            id: data[i].id,
             name: data[i]['user.displayName'],
             gab: data[i].gab,
             date: data[i].createdAt
           });
         }
         return gabs;
-    });
+      });
 
-    const likesP = models.msgs.findAll({include: [models.likes], raw: true})
+    const likesP = models.likes.findAll({
+        raw: true
+      })
       .then(data => {
+        // res.json(data);
+        data.sort(function(left, right) {
+          if (left.msgId > right.msgId) {
+            return 1;
+          } else if (left.msgId < right.msgId) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
         const likes = [];
-        for(let i = 0; i < data.length; i++){
-          // likes.push(data[i][likes.userId].length);
-          likes.push(0);
+        for (let i = 0; i < data.length; i++) {
+          likes.push(data[i].like.length);
         }
         return likes;
       });
 
-    Promise.all([displayNameP, gabsP, likesP])
-      .then(function(results){
+    const destroyP = models.msgs.findAll({
+        raw: true
+      })
+      .then(function(results) {
+        const destroyArr = [];
+        for (var i = 0; i < results.length; i++) {
+          if (req.session.userId == results[i].userId) {
+            destroyArr.push(true);
+          } else {
+            destroyArr.push(false);
+          }
+        }
+        return destroyArr;
+      });
+
+    Promise.all([displayNameP, gabsP, likesP, destroyP])
+      .then(function(results) {
         const displayName = results[0];
         const gabs = results[1];
         const likes = results[2];
-        for(let i=0; i<gabs.length; i++){
+        const destroy = results[3];
+        for (let i = 0; i < gabs.length; i++) {
           gabs[i].likes = likes[i];
+          gabs[i].destroy = destroy[i];
         }
-        res.render('home', {displayName: displayName, gabs: gabs});
+        res.render('home', {
+          displayName: displayName,
+          gabs: gabs
+        });
       });
-    // res.send('done');
   }
 });
 
 router.get('/login', function(req, res) {
   res.render('login');
 });
-router.get('/logout', function(req, res){
+router.get('/logout', function(req, res) {
   req.session.userId = null;
   res.redirect('/login');
 });
@@ -80,19 +118,46 @@ router.get('/signup', function(req, res) {
   res.render('signup');
 });
 router.get('/new', function(req, res) {
-  res.render('new');
+  if (!req.session.userId) {
+    res.redirect('/');
+  } else {
+    res.render('new');
+  }
 });
-// router.get('/likes/:gabId', function(req, res){
-//   var gabId = req.
-//   var likes = models.likes.findAll({where:{
-//
-//   }})
-//   res.render('likes', {likes: likes})
-// });
 
 
-router.post('/like', function (req, res) {
-  
+router.post('/like/:id', function(req, res) {
+  models.likes.findOne({
+      where: {
+        msgId: req.params.id
+      }
+    })
+    .then(function(like) {
+      if (like.like.indexOf(req.session.displayName) < 0) {
+        like.like.push(req.session.displayName);
+        like.update({
+            like: like.like
+          }, {
+            where: {
+              msgId: req.params.id
+            }
+          })
+          .then(function() {
+            res.redirect('/');
+          });
+      } else {
+        res.redirect('/');
+      }
+    });
+});
+
+router.post('/delete/:id', function(req, res) {
+  models.msgs.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    .then(() => {});
   res.redirect('/');
 });
 
@@ -109,26 +174,28 @@ router.post('/signup', function(req, res) {
     console.log('Passwords do not match!');
   } else {
     models.users.create({
-        username: req.body.username,
-        password: req.body.password,
-        displayName: req.body.displayName,
-      });
+      username: req.body.username,
+      password: req.body.password,
+      displayName: req.body.displayName,
+    });
     res.redirect('/login');
   }
 });
 
 router.post('/login', function(req, res) {
-  models.users.findOne({where: req.body})
-  .then(function(user){
-    if(user){
-      req.session.userId = user.id;
-      res.redirect('/');
-    }else{
-      res.redirect('/login');
-    }
-  });
+
+  models.users.findOne({
+      where: req.body
+    })
+    .then(function(user) {
+      if (user) {
+        req.session.userId = user.id;
+        req.session.displayName = user.displayName;
+        res.redirect('/');
+      } else {
+        res.redirect('/login');
+      }
+    });
 });
-
-
 
 module.exports = router;

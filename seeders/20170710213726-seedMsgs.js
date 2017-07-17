@@ -6,22 +6,22 @@ module.exports = {
       {gab: 'OMG! I love purple hair!',
       createdAt: new Date(),
       updatedAt: new Date(),
-      userId: 12},
+      userId: 2},
 
       {gab: 'Moolteepasssss',
       createdAt: new Date(),
       updatedAt: new Date(),
-      userId: 14},
+      userId: 4},
 
       {gab: 'One time at band camp...',
       createdAt: new Date(),
       updatedAt: new Date(),
-      userId: 11},
+      userId: 1},
 
       {gab: "Won't you be my neighbor?",
       createdAt: new Date(),
       updatedAt: new Date(),
-      userId: 13},
+      userId: 3},
     ]);
 },
 

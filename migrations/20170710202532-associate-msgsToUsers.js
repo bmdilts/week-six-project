@@ -6,6 +6,7 @@ module.exports = {
       'msgs', 'userId', {
         type: Sequelize.INTEGER,
         allowNull: false,
+        onDelete: 'cascade',
         references: {
           model: 'users',
           key: 'id'

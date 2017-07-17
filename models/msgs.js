@@ -4,8 +4,8 @@ module.exports = function(sequelize, DataTypes) {
     gab: DataTypes.TEXT
   });
   msgs.associate = function(models){
-    msgs.belongsTo(models.users);
-    msgs.hasMany(models.likes);
+    msgs.belongsTo(models.users, { onDelete: 'cascade', hooks: true });
+    msgs.hasMany(models.likes, { onDelete: 'cascade', hooks: true });
   };
   return msgs;
 };

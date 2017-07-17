@@ -6,6 +6,7 @@ module.exports = {
       'likes', 'msgId', {
         type: Sequelize.INTEGER,
         allowNull: false,
+        onDelete: 'cascade',
         references: {
           model: 'msgs',
           key: 'id'

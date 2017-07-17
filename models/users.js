@@ -6,8 +6,8 @@ module.exports = function(sequelize, DataTypes) {
     displayName: DataTypes.STRING
   });
   users.associate = function(models){
-    users.hasMany(models.likes);
-    users.hasMany(models.msgs);
+    users.hasMany(models.likes, { onDelete: 'cascade', hooks: true });
+    users.hasMany(models.msgs, { onDelete: 'cascade', hooks: true });
   };
   return users;
 };
